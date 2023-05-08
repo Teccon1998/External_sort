@@ -59,10 +59,6 @@ public class RunReaderTest {
 		RunReader reader = new RunReader(fileName, bufferSize, externalSort);
 		for (Integer i = 0; i < n; i++) {
 			boolean hasnext = reader.hasNext();
-			if(i==93)
-			{
-				System.out.println("fALSE");
-			}
 			System.out.println(hasnext);
 			assertEquals(true, hasnext);
 			Object object = reader.next();

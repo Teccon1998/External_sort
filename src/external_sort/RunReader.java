@@ -88,38 +88,32 @@ public class RunReader implements Iterator<Object> {
 	@Override
 	public boolean hasNext() {
 		try {
-			if(externalSort.iterator!= null)
-			{
-				if(externalSort.iterator.hasNext())
-				{
-					return true;
-				}
-					
-				return false;
-			}
-			else
+			if(externalSort.iterator== null)
 			{
 				InputBuffer buffer = read();
 				Iterator iterator = buffer.iterator();
 				externalSort.iterator = iterator;
 				return hasNext();
 			}
-			///////
-		// 	externalSort.iterator = (Iterator<?>) read().iterator();
-		// 	if (buffer != null) {
-		// 		Iterator iter = buffer.iterator();
-		// 		if(iter.hasNext())
-		// 			return true;
-		// 		return false;
-		// 	} else {
-		// 		// the run is empty or has been fully read
-		// 		in.close();
-		// 		return false;
-		// 	}
-		// } catch (IOException | ClassNotFoundException e) {
-		// 	e.printStackTrace();
-		// 	return false;
-		// }
+			else
+			{
+				if(!externalSort.iterator.hasNext())
+				{
+					InputBuffer buffer = read();
+					try {
+						Iterator iterator = buffer.iterator();	
+						externalSort.iterator = iterator;
+						return hasNext();
+					} catch (Exception e) {
+						return false;
+					}
+					
+				}
+				else
+				{
+					return true;
+				}
+			}
 		}
 		catch(Exception e)
 		{
@@ -147,8 +141,8 @@ public class RunReader implements Iterator<Object> {
 		if(externalSort.iterator != null)
 		{
 			if(externalSort.iterator.hasNext())
-					return externalSort.iterator.next();
-				return null;
+				return externalSort.iterator.next();
+			return null;
 		}
 		else
 		{
@@ -164,25 +158,5 @@ public class RunReader implements Iterator<Object> {
 			}
 		}
 		throw new NoSuchElementException("No more elements in the run.");
-		// try {
-		// 	InputBuffer buffer = read();
-		// 	if (buffer != null) {
-		// 		Iterator<Object> iter = buffer.iterator();
-		// 		if (iter.hasNext()) {
-		// 			return iter.next();
-		// 		} else {
-		// 			// the buffer is empty; try to read the next one
-		// 			return next();
-		// 		}
-		// 	} else {
-		// 		// the run is empty or has been fully read
-		// 		in.close();
-		// 		throw new NoSuchElementException("No more elements in the run.");
-		// 	}
-		// } catch (IOException | ClassNotFoundException e) {
-		// 	throw new NoSuchElementException(e.getMessage());
-		// }
 	}
-
-		
 }
