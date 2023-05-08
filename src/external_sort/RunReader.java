@@ -54,6 +54,7 @@ public class RunReader implements Iterator<Object> {
 	 *             if the class of a serialized object cannot be found
 	 * 
 	 */
+	
 	public RunReader(String fileName, int bufferSize, ExternalSort<?> externalSort)
 			throws IOException, ClassNotFoundException {
 		this.externalSort = externalSort;
@@ -85,6 +86,7 @@ public class RunReader implements Iterator<Object> {
 	 *
 	 * @return {@code true} if this {@code RunReader} has more objects to iterate over; {@code false} otherwise
 	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public boolean hasNext() {
 		try {
@@ -136,27 +138,40 @@ public class RunReader implements Iterator<Object> {
  * @throws NoSuchElementException
  *             if the iteration has no more objects to iterate over
  */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public Object next() throws NoSuchElementException {
-		if(externalSort.iterator != null)
-		{
-			if(externalSort.iterator.hasNext())
-				return externalSort.iterator.next();
-			return null;
-		}
-		else
-		{
-			InputBuffer buffer;
-			try {
-				buffer = read();
+		try {
+			if(externalSort.iterator== null)
+			{
+				InputBuffer buffer = read();
 				Iterator iterator = buffer.iterator();
 				externalSort.iterator = iterator;
-				return next();
-			} catch (ClassNotFoundException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return iterator.next();
+			}
+			else
+			{
+				if(externalSort.iterator.hasNext())
+				{
+					return externalSort.iterator.next();
+				}
+				else
+				{
+					InputBuffer buffer = read();
+					try {
+						Iterator iterator = buffer.iterator();	
+						externalSort.iterator = iterator;
+						return iterator.next();
+					} catch (Exception e) {
+						return null;
+					}
+				}
 			}
 		}
-		throw new NoSuchElementException("No more elements in the run.");
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

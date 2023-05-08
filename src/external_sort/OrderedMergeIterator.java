@@ -71,8 +71,10 @@ public class OrderedMergeIterator<T extends Comparable<? super T>> implements It
 		Map.Entry<T, Iterator<T>> e = queue.poll();
 		if (e == null)
 			throw new NoSuchElementException();
-		// TODO complete this method (10 points)
-		throw new UnsupportedOperationException();
+		T next = e.getKey();
+		if (e.getValue().hasNext())
+			queue.add(new AbstractMap.SimpleEntry<T, Iterator<T>>(e.getValue().next(), e.getValue()));
+		return next;
 	}
 
 }
